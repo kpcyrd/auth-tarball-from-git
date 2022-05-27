@@ -27,7 +27,7 @@ pub async fn clone(folder: &Path, url: &str, tag: &str) -> Result<()> {
 }
 
 pub async fn verify_tag(folder: &Path, tag: &str, keyring: &Path) -> Result<()> {
-    let tag_bytes = cat_tag(folder, &tag).await?;
+    let tag_bytes = cat_tag(folder, tag).await?;
     let needle = b"-----BEGIN PGP SIGNATURE-----\n";
     let pos = tag_bytes
         .windows(needle.len())
@@ -87,7 +87,7 @@ pub async fn cat_tag(folder: &Path, tag: &str) -> Result<Vec<u8>> {
 pub async fn archive(path: &Path, prefix: &str, tag: &str, format: &str) -> Result<Vec<u8>> {
     let cmd = Command::new("git")
         .args(&[
-            "archive", "--format", format, "--prefix", &prefix, "--", tag,
+            "archive", "--format", format, "--prefix", prefix, "--", tag,
         ])
         .stdout(Stdio::piped())
         .current_dir(path)
