@@ -1,6 +1,11 @@
 [package]
 name = "auth-tarball-from-git"
 version = "0.1.0"
+description = "Authenticate a tarball through a signed tag in a git repository (with reproducible builds)"
+authors = ["kpcyrd <git@rxv.cc>"]
+license = "GPL-3.0"
+repository = "https://github.com/kpcyrd/auth-tarball-from-git"
+categories = ["command-line-utilities"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
