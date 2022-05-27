@@ -1,0 +1,33 @@
+name: Rust
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get install sqv
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
+
+    - name: Integration test (sequoia-pgp, download)
+      run: wget https://keys.openpgp.org/vks/v1/by-fingerprint/CBCD8F030588653EEDD7E2659B7DD433F254904A https://gitlab.com/sequoia-pgp/sequoia/-/archive/openpgp/v1.9.0/sequoia-openpgp-v1.9.0.tar.gz
+    - name: Integration test (sequoia-pgp)
+      run: cargo run -- --keyring CBCD8F030588653EEDD7E2659B7DD433F254904A --tag openpgp/v1.9.0 https://gitlab.com/sequoia-pgp/sequoia sequoia-openpgp-v1.9.0.tar.gz
+
+    - name: Integration test (monero, download)
+      run: wget https://github.com/monero-project/monero/raw/master/utils/gpg_keys/luigi1111.asc https://github.com/monero-project/monero/archive/refs/tags/v0.17.3.2.tar.gz
+    - name: Integration test (monero)
+      run: cargo run -- --keyring luigi1111.asc --tag v0.17.3.2 --prefix monero-0.17.3.2 https://github.com/monero-project/monero v0.17.3.2.tar.gz
