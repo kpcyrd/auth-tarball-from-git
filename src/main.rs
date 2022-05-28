@@ -21,7 +21,8 @@ async fn main() -> Result<()> {
         let path = tmp_dir.path();
         git::clone(path, &args.repo, &tag).await?;
 
-        git::verify_tag(path, &tag, &args.keyring).await?;
+        let keyrings = args.keyrings.iter().map(|p| p.as_ref()).collect::<Vec<_>>();
+        git::verify_tag(path, &tag, &keyrings).await?;
         info!("Tag successfully verified");
 
         info!("Reproducing archive...");

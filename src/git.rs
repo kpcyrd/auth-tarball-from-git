@@ -48,7 +48,7 @@ impl Tag {
         }
     }
 
-    pub async fn verify(&self, keyring: &Path) -> Result<()> {
+    pub async fn verify(&self, keyrings: &[&Path]) -> Result<()> {
         let obj = self.data();
         let sig = self
             .sig()
@@ -64,9 +64,14 @@ impl Tag {
         fs::write(&obj_path, obj).await?;
         fs::write(&sig_path, sig).await?;
 
-        let cmd = Command::new("sqv")
-            .arg("--keyring")
-            .arg(keyring)
+        let mut cmd = Command::new("sqv");
+
+        for keyring in keyrings {
+            cmd.arg("--keyring");
+            cmd.arg(keyring);
+        }
+
+        let cmd = cmd
             .arg("--")
             .arg(sig_path)
             .arg(obj_path)
@@ -96,7 +101,7 @@ pub async fn read_tag(folder: &Path, tag: &str) -> Result<Tag> {
     })
 }
 
-pub async fn verify_tag(folder: &Path, tag: &str, keyring: &Path) -> Result<()> {
+pub async fn verify_tag(folder: &Path, tag: &str, keyring: &[&Path]) -> Result<()> {
     let tag = read_tag(folder, tag).await?;
     tag.verify(keyring).await
 }

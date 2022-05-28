@@ -4,8 +4,8 @@ use std::path::PathBuf;
 #[derive(Debug, clap::Parser)]
 pub struct Args {
     /// A file with trusted public keys to verify with
-    #[clap(long)]
-    pub keyring: PathBuf,
+    #[clap(long = "keyring")]
+    pub keyrings: Vec<PathBuf>,
     /// The tag to verify and use to reproduce the tarball
     #[clap(long)]
     pub tag: Option<String>,
