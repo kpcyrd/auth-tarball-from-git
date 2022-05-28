@@ -39,6 +39,10 @@ instead of gpg.
 
 ## ⚠️ Security Considerations ⚠️
 
+Signed git tags only authenticate the **tag name**, not the **repository url**. A
+`v0.1.0` tag can be replayed from one repository into another if they are both
+signed by the key provided in `--keyring`.
+
 The hash in the signed tag is a **SHA1** hash, which is known to be problematic
 ([2005], [2017], [2020]). Regardless of the quality of the pgp signature,
 verifying a tarball with git can only provide sha1-tier cryptographic
